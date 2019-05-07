@@ -115,7 +115,6 @@ public:
 
    // Creates and returns a string of values contained in the tree, by order
    // of level. The value at the root will be appended first, followed by
-   //pre:
    //post: returns a string representation of all values in the tree seperated
    // by spaces in preorder sequence as a string.
    string getLevelOrder(); // EC function!
@@ -154,12 +153,9 @@ private:
    void getPostOrderTraversal(Node* root, stringstream &ss);
    void getPreOrderTraversal(Node* root, stringstream &ss);
    void getInOrderTraversal(Node* root, stringstream& ss);
-   void computeExtremes(Node* curr, int current[], int extremes[] );
    //void remove( Node *&curr, T element );
    typename BST<T>::Node* remove( Node* &root, T element);
-
 };
-
 
 
 template<typename T>
@@ -168,27 +164,8 @@ BST<T>::BST() {
 }
 
 template<typename T>
-BST<T>::BST(const BST& other) {
+BST<T>::BST( const BST& other ) {
       root = copyTree(other.root);
-}
-
-template<typename T>
-BST<T>::~BST() {
-   if(root == nullptr) {
-      delete root;
-   }
-
-   deleteNodes(root);
-}
-
-
-template<typename T>
-void BST<T>::deleteNodes( Node* root ) {
-   if(root != nullptr) {
-      deleteNodes(root->right);
-      deleteNodes(root->left);
-      delete root;
-   }
 }
 
 template<typename T>
@@ -196,6 +173,24 @@ BST<T>::Node::Node(T val) {
    left =  nullptr;
    right = nullptr;
    value = val;
+}
+
+template<typename T>
+BST<T>::~BST() {
+   if(root == nullptr) {
+      delete root;
+   }
+   deleteNodes(root);
+}
+
+template< typename T>
+BST<T>& BST<T>::operator =( const BST<T> &rhs ) {
+   if( this != &rhs) {
+      this->deleteNodes(root);
+      Node* temp = rhs.root;
+      root = copyTree(temp);
+   }
+   return *this;
 }
 
 template<typename T>
@@ -254,6 +249,14 @@ int BST<T>::countNodes( Node* root, int &counter) {
    return counter;
 }
 
+template<typename T>
+void BST<T>::deleteNodes( Node* root ) {
+   if(root != nullptr) {
+      deleteNodes(root->right);
+      deleteNodes(root->left);
+      delete root;
+   }
+}
 
 template<typename T>
 bool BST<T>::empty() {
@@ -262,7 +265,6 @@ bool BST<T>::empty() {
    }
    return false;
 }
-
 
 template<typename T>
 string BST<T>::getAncestors( T target ) {
@@ -341,7 +343,6 @@ string BST<T>::getLevelOrder() {
       while( que.empty() == false ) {
          Node* temp = que.front();
          ss << temp->value << " ";
-         //cout << temp->value << endl;
          que.pop();
 
          if(temp->left != nullptr ) {
@@ -382,7 +383,6 @@ int BST<T>::getWidth() {
       if(nodeCount == 0) {
          isDone = true;
          continue;
-         //break;
       }
 
       if( nodeCount >  max ) {
@@ -465,8 +465,8 @@ string BST<T>::getPostOrderTraversal() {
 template<typename T>
 void BST<T>::getPostOrderTraversal(Node* root, stringstream &ss) {
    if(root != nullptr) {
-      getPostOrderTraversal(root->left);
-      getPostOrderTraversal(root->right);
+      getPostOrderTraversal(root->left, ss);
+      getPostOrderTraversal(root->right, ss);
       ss << root->value << " ";
    }
 }
@@ -576,91 +576,6 @@ template<typename T>
 int BST<T>::size() {
    int counter = 0;
    return countNodes(root, counter);
-}
-
-int main() {
-
-   // BST<int> b;
-   // cout << " Inserting 22 " << endl;
-   // b.insert(22);
-   // cout << " Inserting 25 " << endl;
-   // b.insert(25);
-   // cout << " Inserting 13 " << endl;
-   // b.insert(13);
-   // cout << " Inserting 80 " << endl;
-   // b.insert(80);
-   // cout << " Inserting 36 " << endl;
-   // b.insert(36);
-   // cout << " Inserting 41 " << endl;
-   // b.insert(41);
-   // cout << " Inserting 7 " << endl;
-   // b.insert(7);
-   // cout << " Inserting 11 " << endl;
-   // b.insert(11);
-   // cout << " Inserting 20 " << endl;
-   // b.insert(20);
-   //
-   // cout << "here is the state of the list in preorder sequence: " << b.getPreOrderTraversal();
-   // cout << "This is the height of the tree: " << b.getHeight() << endl;
-   // cout << "This is width of the tree: " << b.getWidth() << endl;
-
-
-   // b.remove(22);
-   // cout << "After removing 22 from tree, the state of preorder is: " << b.getPreOrderTraversal();
-   // cout << "This is the height of the tree: " << b.getHeight() << endl;
-   // cout << "This is width of the tree: " << b.getWidth() << endl;
-   //
-   // b.remove(7);
-   // cout << "After removing 7 from tree, the state of preorder is: " << b.getPreOrderTraversal();
-   // cout << "This is the height of the tree: " << b.getHeight() << endl;
-   // cout << "This is width of the tree: " << b.getWidth() << endl;
-   //
-   // cout << "\n" << endl;
-   //
-   // BST<double> randomTree;
-   // cout << "New tree will 10 random doubles" << endl;
-   // for(int i = 1; i < 10; i++) {
-   //    randomTree.insert(rand());
-   // }
-
-   //cout << "This is the state of the randomly populated tree: " << randomTree.getPreOrderTraversal() << endl;
-
-
-   //cout << "this many nodes in tree: " << b.size() << endl;
-   // cout << "There are this many leaves in the tree: " << b.getLeafCount() <<endl;
-   //
-   // cout << "The height of the tree is: " << b.getHeight() << endl;
-
-   //cout << "The level of -- is " << b.getLevel(80) << endl;
-
-   //cout << "The values by level are: " << b.getLevelOrder();
-
-   // copy constructor test
-   //BST<int> b2(b);
-
-   // copy constructor tests
-   // cout << "Here are the values in the first tree: ";
-   // cout << b.getPreOrderTraversal();
-   // cout<< endl;
-   // cout << "Here are the values in the second tree: ";
-   // cout << b2.getPreOrderTraversal();
-   // cout << endl;
-
-   // cout << "\n\n" << endl;
-   // cout << "The get ancestors of 7 are: " << b.getAncestors(7) << endl;
-   // cout << "The get ancestors of 41 are: " << b.getAncestors(41) << endl;
-   //
-   // cout<< "\n" << endl;
-
-   BST<string> s;
-   s.insert("gene");
-   s.insert("bea");
-   s.insert("jen");
-   s.insert("sue");
-   s.insert("pat");
-   s.insert("uma");
-   cout << s.getPreOrderTraversal() << endl;
-
 }
 
 
