@@ -1,15 +1,12 @@
 // Author: Dale Berg, CPSC 2430 02
-// Filename: BST.h
+// Filename: BSTx.h
 // Assignment: p2, template BST
-// Date: 5/4/2019
+// Date: 5/7/2019
 
-// Purpose: This template Binary Search Tree data structure takes in a
-// user defined data type and constructs a bianry search tree of elements
-// of that type.
-// INPUT: User inputs file name containing strings to be read by the program.
-// PROCESS: uses methods to convert string to lower case and remove all spaces from string.
-// Then uses recusion aided by helper methods to determine whether the string is  apalindrome.
-// OUTPUT: Prints to the console whether the string is a palindrome or not.
+// Purpose: This is the extra credit file for p2. Everything is identical except
+// the additional extra credit functions - tests for the extra credit functions
+// are included in p2x.cpp.
+
 #ifndef BST_H
 #define BST_H
 
@@ -119,6 +116,10 @@ public:
    // by spaces in preorder sequence as a string.
    string getLevelOrder(); // EC function!
 
+   // determines and returns the width of the tree. Width is defined by the
+   // level with the greatest number of nodes.
+   //post: returns an integer representing the horizontal width of the tree
+   // at it's widest point.
    int getWidth(); // EC function!
 
 private:
@@ -158,6 +159,11 @@ private:
 };
 
 
+//*********************
+// BIG 4              *
+//*********************
+
+
 template<typename T>
 BST<T>::BST() {
    root = nullptr;
@@ -165,7 +171,7 @@ BST<T>::BST() {
 
 template<typename T>
 BST<T>::BST( const BST& other ) {
-      root = copyTree(other.root);
+      root = copyTree(other.root); // copy uses preorder traversal
 }
 
 template<typename T>
@@ -185,8 +191,8 @@ BST<T>::~BST() {
 
 template< typename T>
 BST<T>& BST<T>::operator =( const BST<T> &rhs ) {
-   if( this != &rhs) {
-      this->deleteNodes(root);
+   if( this != &rhs ) {
+      this->deleteNodes(root); // delete nodes uses postporder traversal
       Node* temp = rhs.root;
       root = copyTree(temp);
    }
@@ -213,6 +219,7 @@ bool BST<T>::contains( Node* root, T element ) {
    return true;
 }
 
+// copy tree uses a preorder traversal to make copy of tree
 template<typename T>
 typename BST<T>::Node* BST<T>::copyTree( Node* root ) {
    if( root ==  nullptr ) {
@@ -226,6 +233,7 @@ typename BST<T>::Node* BST<T>::copyTree( Node* root ) {
    }
 }
 
+// count leaves is helper to getLeafCount
 template<typename T>
 int BST<T>::countLeaves( Node* root, int &counter ) {
 
@@ -239,6 +247,8 @@ int BST<T>::countLeaves( Node* root, int &counter ) {
    return counter;
 }
 
+// uses preorder traversal with a counter passed by reference to count nodes
+// in tree
 template<typename T>
 int BST<T>::countNodes( Node* root, int &counter) {
    if( root != nullptr )  {
@@ -249,6 +259,7 @@ int BST<T>::countNodes( Node* root, int &counter) {
    return counter;
 }
 
+// uses postorder traversal to delete nodes in tree
 template<typename T>
 void BST<T>::deleteNodes( Node* root ) {
    if(root != nullptr) {
@@ -273,6 +284,7 @@ string BST<T>::getAncestors( T target ) {
    return ss.str();
 }
 
+// build string of ancestors to node by passing stringstream by reference
 template<typename T>
 void BST<T>::getAncestors( Node* root, stringstream &ss, T target ) {
    // we only want to build onto the string if the root value != target value
@@ -301,8 +313,8 @@ int BST<T>::getHeight( Node* root ) {
 
    int leftHeight = getHeight(root->left);
    int rightHeight = getHeight(root->right);
-
-   return 1 + max(leftHeight, rightHeight); // + 1 for root
+   // want ti return whichever branch is larger, + 1 for root
+   return 1 + max(leftHeight, rightHeight);
 }
 
 template<typename T>
@@ -333,6 +345,7 @@ int BST<T>::getLevel(Node* root, T element, int& counter) {
    return counter;
 }
 
+// EC function
 template<typename T>
 string BST<T>::getLevelOrder() {
    if( root != nullptr ) {
@@ -358,7 +371,7 @@ string BST<T>::getLevelOrder() {
    }
 }
 
-
+// EC function
 template< typename T>
 int BST<T>::getWidth() {
 
@@ -439,6 +452,9 @@ typename BST<T>::Node* BST<T>::insertNode( Node* root, T element ) {
    return root;
 }
 
+
+// All traversals below use stirngstream objects passed by reference to
+// build strings of values in respective sequences
 template<typename T>
 string BST<T>::getInOrderTraversal() {
    stringstream ss;
@@ -578,22 +594,4 @@ int BST<T>::size() {
    return countNodes(root, counter);
 }
 
-
-
 #endif
-
-//*********************
-// BIG 4              *
-//*********************
-
-
-
-//*********************
-// PUBLIC FUNCTIONS   *
-//*********************
-
-
-
-//*********************
-// PRIVATE FUNCTIONS  *
-//*********************

@@ -1,3 +1,11 @@
+// Author: Dale Berg, CPSC 2430 02
+// Filename: p2.cpp
+// Assignment: p2, template BST
+// Date: 5/7/2019
+
+// Purpose: Driver class for Template BST program. This file contains a main as
+// well as extensive testing of all BST functionality.
+
 #include"BST.h"
 #include<fstream>
 #include<iostream>

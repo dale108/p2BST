@@ -1,15 +1,15 @@
 // Author: Dale Berg, CPSC 2430 02
 // Filename: BST.h
 // Assignment: p2, template BST
-// Date: 5/4/2019
+// Date: 5/7/2019
 
 // Purpose: This template Binary Search Tree data structure takes in a
 // user defined data type and constructs a bianry search tree of elements
-// of that type.
-// INPUT: User inputs file name containing strings to be read by the program.
-// PROCESS: uses methods to convert string to lower case and remove all spaces from string.
-// Then uses recusion aided by helper methods to determine whether the string is  apalindrome.
-// OUTPUT: Prints to the console whether the string is a palindrome or not.
+// of that type. All functions are listed and implemented in alphabetical order,
+// save for the big four, which are grouped together per convention.
+// INPUT: This is a template program, which means it can handle any data type.
+// It should be noted that data types must be comparable (able to be tested by
+// >, < and == operators) for this data structure to function.
 #ifndef BST_H
 #define BST_H
 
@@ -23,19 +23,18 @@ template <typename T>
 class BST {
 public:
    // constructor for tmeplate BST
-   // pre:
    // post: constructs new template BST object with node set to null
-   BST(); // done
+   BST();
 
    // destroctor for BST
 	// pre: BST exists
 	// post: The tree is destroyed
-   ~BST(); // done
+   ~BST();
 
    // copy constructor
    // pre: BST object passed in
    // post: values from BST passed as an argument copied to current BST object
-   BST(const BST &); // done
+   BST(const BST &);
 
    // overloaded assignment operator.
    //pre: Right hand side of assignment operator is BST object of same data type
@@ -46,64 +45,64 @@ public:
    //inserts node at correct place in BST hierarchy
    //pre: element to be added passed as an argument.
    //post: new node with with value passed as argument added to BST.
-	void insert(T); // done
+	void insert(T);
 
-
-	bool contains(T); // done
    //returns boolean value representing whether or not the tree contains the
    // value passed as argument.
    //pre: Value to be searched for in BST
    //post: Boolean value representing whether the element passed as an argument
    // is an element in the tree.
+	bool contains(T);
 
    // Removes an element from the tree
 	//pre: Pass in valu of element to be remo e from tree.
-	//post:
-	void remove(T); // done
+	//post: The element in the tree with the value passed as argument is removed
+   // from the tree. If there is no element with this value, nothing happens.
+	void remove(T);
 
    // Checks if the tree is empty
 	//post: Returns boolean value representing if the tree has 1 or more values.
    // A newly instatiated tree, which has not been added to is an empty tree.
-   bool empty(); // done
+   bool empty();
 
    // Returns the number of nodes in the binary search tree.
 	//post: returns integer number of nodes in the tree.
-   int size();  // done
+   int size();
 
    // Returns the number of nodes in the tree which have no child nodes.
    //post: returns integer number of nodes in the tree with no children.
-   int getLeafCount(); // done
+   int getLeafCount();
 
    // returns the height of the tree, where height is defined as the longest
    // path from the root to any leaf node.
 	//post: returns integer height of tree.
-   int getHeight(); // done
+   int getHeight();
 
    // Takes a template element (T) and finds the level of the tree on which that
    // element is located.
 	//pre: Template (T) argument of element to be found.
 	//post: returns integer representing which level of the tree contains
    // element value passed as argument.
-   int getLevel(T); // done
+   int getLevel(T);
 
 
    // Gets a string of all the values in the tree, in "in order" sequence.
    //post: returns a string representation of all values in the tree in
    // inorder sequence, seperated by spaces, as a string.
-   string getInOrderTraversal(); // done
+   string getInOrderTraversal();
 
 
    // Creates and returns string of values in pre order sequence.
    //pre:
    //post: returns a string representation of all values in the tree seperated
    // by spaces in preorder sequence as a string.
-   string getPreOrderTraversal(); // done
+   string getPreOrderTraversal();
 
    // Creates and returns string of values in post order sequence.
    //pre:
    //post: returns a string representation of all values in the tree seperated
    // by spaces in preorder sequence as a string.
-   string getPostOrderTraversal(); // done
+   string getPostOrderTraversal();
 
    // Given a T value, returns a stirng of all values which are ancestors
    //to the node containing that value.
@@ -111,15 +110,8 @@ public:
    // declared in the initialization of the tree.
 	//post: returns a stirng representation of the data fields of all nodes
    // which are ancestors to the node containing the vlaue of the argument passed
-   string getAncestors(T); // done
+   string getAncestors(T);
 
-   // Creates and returns a string of values contained in the tree, by order
-   // of level. The value at the root will be appended first, followed by
-   //post: returns a string representation of all values in the tree seperated
-   // by spaces in preorder sequence as a string.
-   string getLevelOrder(); // EC function!
-
-   int getWidth(); // EC function!
 
 private:
    struct Node { 
@@ -165,7 +157,7 @@ BST<T>::BST() {
 
 template<typename T>
 BST<T>::BST( const BST& other ) {
-      root = copyTree(other.root);
+      root = copyTree(other.root); // copy uses preorder traversal
 }
 
 template<typename T>
@@ -185,8 +177,8 @@ BST<T>::~BST() {
 
 template< typename T>
 BST<T>& BST<T>::operator =( const BST<T> &rhs ) {
-   if( this != &rhs) {
-      this->deleteNodes(root);
+   if( this != &rhs ) {
+      this->deleteNodes(root); // delete nodes uses postporder traversal
       Node* temp = rhs.root;
       root = copyTree(temp);
    }
@@ -213,6 +205,7 @@ bool BST<T>::contains( Node* root, T element ) {
    return true;
 }
 
+// copy tree uses a preorder traversal to make copy of tree
 template<typename T>
 typename BST<T>::Node* BST<T>::copyTree( Node* root ) {
    if( root ==  nullptr ) {
@@ -226,6 +219,7 @@ typename BST<T>::Node* BST<T>::copyTree( Node* root ) {
    }
 }
 
+// count leaves is helper to getLeafCount
 template<typename T>
 int BST<T>::countLeaves( Node* root, int &counter ) {
 
@@ -239,6 +233,8 @@ int BST<T>::countLeaves( Node* root, int &counter ) {
    return counter;
 }
 
+// uses preorder traversal with a counter passed by reference to count nodes
+// in tree
 template<typename T>
 int BST<T>::countNodes( Node* root, int &counter) {
    if( root != nullptr )  {
@@ -249,6 +245,7 @@ int BST<T>::countNodes( Node* root, int &counter) {
    return counter;
 }
 
+// uses postorder traversal to delete nodes in tree
 template<typename T>
 void BST<T>::deleteNodes( Node* root ) {
    if(root != nullptr) {
@@ -273,6 +270,7 @@ string BST<T>::getAncestors( T target ) {
    return ss.str();
 }
 
+// build string of ancestors to node by passing stringstream by reference
 template<typename T>
 void BST<T>::getAncestors( Node* root, stringstream &ss, T target ) {
    // we only want to build onto the string if the root value != target value
@@ -301,8 +299,8 @@ int BST<T>::getHeight( Node* root ) {
 
    int leftHeight = getHeight(root->left);
    int rightHeight = getHeight(root->right);
-
-   return 1 + max(leftHeight, rightHeight); // + 1 for root
+   // want ti return whichever branch is larger, + 1 for root
+   return 1 + max(leftHeight, rightHeight);
 }
 
 template<typename T>
@@ -331,79 +329,6 @@ int BST<T>::getLevel(Node* root, T element, int& counter) {
          }
       }
    return counter;
-}
-
-template<typename T>
-string BST<T>::getLevelOrder() {
-   if( root != nullptr ) {
-      ostringstream ss;
-      queue<Node *> que;
-      que.push(root);
-
-      while( que.empty() == false ) {
-         Node* temp = que.front();
-         ss << temp->value << " ";
-         que.pop();
-
-         if(temp->left != nullptr ) {
-            que.push(temp->left);
-         }
-
-         if(temp->right != nullptr ) {
-            que.push( temp->right );
-
-         }
-      }
-      return  ss.str();
-   }
-}
-
-
-template< typename T>
-int BST<T>::getWidth() {
-
-   Node* curr = root;
-
-   if( curr == nullptr ) {
-      return 0;
-   }
-
-   queue<Node *> q;
-   q.push(curr);
-
-   int level = 0;
-   int max = INT_MIN;
-
-   bool isDone = false;
-
-   while(!isDone) {
-
-      int nodeCount = q.size();
-
-      if(nodeCount == 0) {
-         isDone = true;
-         continue;
-      }
-
-      if( nodeCount >  max ) {
-         max = nodeCount;
-      }
-
-      while (nodeCount > 0) {
-         Node *n = q.front();
-         q.pop();
-         if( n->left != nullptr) {
-            q.push(n->left);
-         }
-         if(n->right != nullptr) {
-            q.push(n->right);
-         }
-         nodeCount--;
-      }
-
-      level++;
-   }
-   return max;
 }
 
 
@@ -439,6 +364,9 @@ typename BST<T>::Node* BST<T>::insertNode( Node* root, T element ) {
    return root;
 }
 
+
+// All traversals below use stirngstream objects passed by reference to
+// build strings of values in respective sequences
 template<typename T>
 string BST<T>::getInOrderTraversal() {
    stringstream ss;
@@ -578,21 +506,4 @@ int BST<T>::size() {
    return countNodes(root, counter);
 }
 
-
 #endif
-
-//*********************
-// BIG 4              *
-//*********************
-
-
-
-//*********************
-// PUBLIC FUNCTIONS   *
-//*********************
-
-
-
-//*********************
-// PRIVATE FUNCTIONS  *
-//*********************
