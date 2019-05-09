@@ -123,15 +123,16 @@ public:
    int getWidth(); // EC function!
 
 private:
-   struct Node { 
+   struct Node {
       T value;
       Node *left;
       Node *right;
 
+      // private by default
       Node( T );
    };
 
-   Node* root; 
+   Node* root;
 
 private:
 
@@ -148,13 +149,12 @@ private:
    void deleteNode(Node*& ptr);
    void getAncestors( Node* root, stringstream &ss, T target );
    int getHeight( Node* root );
-   int getLevel(Node* root, T element, int& counter);
+   int getLevel(Node* root, T element, int& counter, bool& flag);
    Node* insertNode( Node* root, T element );
    Node* inOrderSucessor( Node* root );
    void getPostOrderTraversal(Node* root, stringstream &ss);
    void getPreOrderTraversal(Node* root, stringstream &ss);
    void getInOrderTraversal(Node* root, stringstream& ss);
-   //void remove( Node *&curr, T element );
    typename BST<T>::Node* remove( Node* &root, T element);
 };
 
@@ -326,20 +326,28 @@ int BST<T>::getLeafCount() {
 template<typename T>
 int BST<T>::getLevel( T element ) {
    int counter = 0;
-   return getLevel(root, element, counter);
+   bool flag = false;
+   int level = getLevel(root, element, counter, flag);
+   if( flag ) {
+      return level;
+   }
+   else {
+      return -1;
+   }
 }
 
 template<typename T>
-int BST<T>::getLevel(Node* root, T element, int& counter) {
+int BST<T>::getLevel(Node* root, T element, int& counter, bool& flag) {
    if(root != nullptr) {
       ++counter;
       if( element < root->value ) {
-         getLevel(root->left, element, counter);
+         getLevel(root->left, element, counter, flag);
       }
       else if( element > root->value ) {
-         getLevel(root->right, element, counter);
+         getLevel(root->right, element, counter, flag);
       }
          if( element == root->value) {
+            flag = true;
          }
       }
    return counter;
@@ -353,10 +361,12 @@ string BST<T>::getLevelOrder() {
       queue<Node *> que;
       que.push(root);
 
+      // while the ques has values, we can pop from front
       while( que.empty() == false ) {
          Node* temp = que.front();
          ss << temp->value << " ";
          que.pop();
+
 
          if(temp->left != nullptr ) {
             que.push(temp->left);
@@ -368,6 +378,58 @@ string BST<T>::getLevelOrder() {
          }
       }
       return  ss.str();
+   }
+   return " "; // empty tree case
+}
+
+
+// All traversals below use stirngstream objects passed by reference to
+// build strings of values in respective sequences
+template<typename T>
+string BST<T>::getInOrderTraversal() {
+   stringstream ss;
+   getInOrderTraversal( root, ss);
+   return ss.str();
+}
+
+template<typename T>
+void BST<T>::getInOrderTraversal(Node* root, stringstream& ss) {
+   if(root != nullptr) {
+      getInOrderTraversal(root->left, ss);
+      ss << root->value << " ";
+      getInOrderTraversal(root->right, ss);
+   }
+}
+
+template<typename T>
+string BST<T>::getPostOrderTraversal() {
+   stringstream ss;
+   getPostOrderTraversal(root, ss);
+   return ss.str();
+}
+
+template<typename T>
+void BST<T>::getPostOrderTraversal(Node* root, stringstream &ss) {
+   if(root != nullptr) {
+      getPostOrderTraversal(root->left, ss);
+      getPostOrderTraversal(root->right, ss);
+      ss << root->value << " ";
+   }
+}
+
+template<typename T>
+string BST<T>::getPreOrderTraversal() {
+   stringstream ss;
+   getPreOrderTraversal(root, ss);
+   return ss.str();
+}
+
+template<typename T>
+void BST<T>::getPreOrderTraversal(Node* root, stringstream& ss) {
+   if(root != nullptr) {
+      ss << root->value << " ";
+      getPreOrderTraversal(root->left, ss);
+      getPreOrderTraversal(root->right, ss);
    }
 }
 
@@ -385,7 +447,7 @@ int BST<T>::getWidth() {
    q.push(curr);
 
    int level = 0;
-   int max = INT_MIN;
+   int max = 0; //INT_MIN
 
    bool isDone = false;
 
@@ -451,103 +513,6 @@ typename BST<T>::Node* BST<T>::insertNode( Node* root, T element ) {
 
    return root;
 }
-
-
-// All traversals below use stirngstream objects passed by reference to
-// build strings of values in respective sequences
-template<typename T>
-string BST<T>::getInOrderTraversal() {
-   stringstream ss;
-   getInOrderTraversal( root, ss);
-   return ss.str();
-}
-
-template<typename T>
-void BST<T>::getInOrderTraversal(Node* root, stringstream& ss) {
-   if(root != nullptr) {
-      getInOrderTraversal(root->left, ss);
-      ss << root->value << " ";
-      getInOrderTraversal(root->right, ss);
-   }
-}
-
-template<typename T>
-string BST<T>::getPostOrderTraversal() {
-   stringstream ss;
-   getPostOrderTraversal(root, ss);
-   return ss.str();
-}
-
-template<typename T>
-void BST<T>::getPostOrderTraversal(Node* root, stringstream &ss) {
-   if(root != nullptr) {
-      getPostOrderTraversal(root->left, ss);
-      getPostOrderTraversal(root->right, ss);
-      ss << root->value << " ";
-   }
-}
-
-template<typename T>
-string BST<T>::getPreOrderTraversal() {
-   stringstream ss;
-   getPreOrderTraversal(root, ss);
-   return ss.str();
-}
-
-template<typename T>
-void BST<T>::getPreOrderTraversal(Node* root, stringstream& ss) {
-   if(root != nullptr) {
-      ss << root->value << " ";
-      getPreOrderTraversal(root->left, ss);
-      getPreOrderTraversal(root->right, ss);
-   }
-}
-
-// template< typename T>
-// void BST<T>::remove( T element ) {
-//    Node* curr = root;
-//    remove(curr, element);
-// }
-
-// template <typename T>
-// void BST<T>::remove( Node *&curr, T element ) {
-//    if( curr != nullptr) {
-//       if(curr->value > element) {
-//          remove(curr->left, element);
-//       }
-//       else if(curr->value < element ) {
-//          remove(curr->right, element);
-//       }
-//       else deleteNode(curr);
-//    }
-// }
-//
-// template <typename T>
-// void BST<T>::deleteNode(Node*& ptr) {
-//    Node* curr = nullptr;
-//    if(ptr != nullptr) {
-//       if(ptr->right == nullptr) {
-//          curr = ptr;
-//          ptr = ptr->left;
-//          delete curr;
-//       }
-//       else if(ptr->left == nullptr) {
-//          curr = ptr;
-//          ptr = ptr->right;
-//          delete curr;
-//       }
-//       else {
-//          curr = ptr->right;
-//          while( curr->left != nullptr ) {
-//             curr = curr->left;
-//          }
-//          curr->left = ptr->left;
-//          curr = ptr;
-//          ptr = ptr->right;
-//          delete curr;
-//       }
-//    }
-// }
 
 
 

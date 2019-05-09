@@ -4,7 +4,8 @@
 // Date: 5/7/2019
 
 // Purpose: Driver class for Template BST program. This file contains a main as
-// well as extensive testing of all BST functionality.
+// well as extensive testing of all BST functionality. Files must be structured
+// with one value per line; lines with multiple values may not be properly read.
 
 #include"BST.h"
 #include<fstream>
@@ -26,7 +27,7 @@ BST<int> intBst;
 cout << "# of nodes: " <<  intBst.size() << endl;
 cout << "# of leaves: " <<  intBst.getLeafCount() << endl;
 cout << "BST height: " << intBst.getHeight() << endl;
-cout << "BST empty?" << intBst.empty() << endl;
+cout << "BST empty?  " << intBst.empty() << endl;
 
 cout<< "\n" << endl;
 
@@ -42,6 +43,22 @@ if(fileReader.is_open()) {
 }
 else {
    cout << "Couldn't open integer file " << endl;
+}
+
+cout<< "\n" << endl;
+
+cout << "Enter string file: ";
+string stringFileName;
+ifstream stringFileReader; // could have reused file reader, but this allows
+                           // freedom to check if both files open
+cin >> stringFileName;
+string str;
+stringFileReader.open(stringFileName);
+if(stringFileReader.is_open()) {
+   cout << "The string file is open!" << endl;
+}
+else {
+   cout << "Couldn't open string file " << endl;
 }
 
 cout<< "\n" << endl;
@@ -113,15 +130,9 @@ cout << "post-order:" << intBst.getPostOrderTraversal() << endl;
 cout << "\n" << endl;
 
 cout << "** TEST INSERT (again) **" << endl;
-cout << "Inserting in this order: 20 40 10 70 99 -2 59 43" << endl;
-intBst.insert(20);
-intBst.insert(40);
-intBst.insert(10);
-intBst.insert(70);
-intBst.insert(90);
-intBst.insert(-2);
-intBst.insert(59);
-intBst.insert(43);
+cout << "Inserting in this order: -5459 4308" << endl;
+intBst.insert(-5459);
+intBst.insert(4308);
 cout << "# of nodes: " <<  intBst.size() << endl;
 cout << "# of leaves: " << intBst.getLeafCount() << endl;
 cout << "BST height: " <<  intBst.getHeight() << endl;
@@ -171,21 +182,6 @@ cout << "BST empty?" << stringTree.empty() << endl;
 
 cout << "\n" << endl;
 
-cout << "Enter string file: ";
-string stringFileName;
-ifstream stringFileReader; // could have reused file reader, but this allows
-                           // freedom to check if both files open
-cin >> stringFileName;
-string str;
-stringFileReader.open(stringFileName);
-if(stringFileReader.is_open()) {
-   cout << "The string file is open!" << endl;
-}
-else {
-   cout << "Couldn't open string file " << endl;
-}
-
-cout << "\n" << endl;
 
 cout <<  "** TEST INSERT **" << endl;
 cout << "Inserting in this order: ";
@@ -218,11 +214,12 @@ cout << "level(jen): " << stringTree.getLevel("jen") << ", ancestors(jen): " << 
 cout << "level(sue): " << stringTree.getLevel("sue") << ", ancestors(sue): " << stringTree.getAncestors("sue") << endl;
 cout << "level(pat): " << stringTree.getLevel("pat") << ", ancestors(pat): " << stringTree.getAncestors("pat") << endl;
 cout << "level(uma): " << stringTree.getLevel("uma") << ", ancestors(uma): " << stringTree.getAncestors("uma") << endl;
+cout << "level(david): " << stringTree.getLevel("david") << ", ancestors(david): " << stringTree.getAncestors("david") << endl;
 
 cout << "\n" << endl;
 
 cout << "** TEST CONTAINS **" << endl;
-cout << "Value in order: " << stringTree.getInOrderTraversal() << endl;
+cout << "Current values in order: " << stringTree.getInOrderTraversal() << endl;
 cout << "contains(mary): "  << stringTree.contains("mary")  << endl;
 cout << "contains(gene): "  << stringTree.contains("gene")  << endl;
 cout << "contains(bea): "  << stringTree.contains("bea")  << endl;
@@ -236,6 +233,9 @@ cout << "\n" << endl;
 
 cout << "** TEST REMOVE **" << endl;
 cout << "Removing in this order: gene mary bea uma yan amy ron opal" << endl;
+cout << "This is the pre-order state of the list: ";
+cout << stringTree.getPreOrderTraversal() << endl;
+cout << "This is the current size " << stringTree.size() << endl;
 stringTree.remove("gene");
 stringTree.remove("mary");
 stringTree.remove("bea");
@@ -254,14 +254,12 @@ cout << "post-order: " << stringTree.getPostOrderTraversal() << endl;
 cout << "\n" << endl;
 
 cout << "** TEST INSERT (again) **" << endl;
-cout << "Inserting in this order: gene mary bea uma yan amy ron opal" << endl;
-stringTree.insert("gene");
-stringTree.insert("mary");
-stringTree.insert("bea");
-stringTree.insert("uma");
-stringTree.insert("yan");
-stringTree.insert("amy");
-stringTree.insert("ron");
+cout << "This is the pre-order state of the list ";
+cout << stringTree.getPreOrderTraversal() << endl;
+cout << "This is the current size " << stringTree.size() << endl;
+cout << "Inserting in this order: david grace opal" << endl;
+stringTree.insert("david");
+stringTree.insert("grace");
 stringTree.insert("opal");
 cout << "# of nodes: " <<  stringTree.size() << endl;
 cout << "# of leaves: " << stringTree.getLeafCount() << endl;
@@ -297,6 +295,7 @@ cout << "in-order: " << stringAssignmentTree.getInOrderTraversal()  << endl;
 cout << "post-order: " << stringAssignmentTree.getPostOrderTraversal() << endl;
 
 cout<< "\n" << endl;
+
 
 fileReader.close();
 stringFileReader.close();
